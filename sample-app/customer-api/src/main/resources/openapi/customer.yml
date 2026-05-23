@@ -1,0 +1,149 @@
+openapi: 3.0.1
+info:
+  title: TMF Customer API (sample, TMF-style)
+  version: 4.0.0
+  description: |
+    TMF-style Customer API that exposes CRUD operations on Customer resources.
+    This sample follows common TMF modelling patterns (resource, href, id, relatedParty, contactMedium).
+
+tags:
+  - name: Customer
+    description: Customer management operations
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /customers:
+    get:
+      tags:
+        - Customer
+      summary: Retrieve a list of Customer resources
+      operationId: listCustomers
+      responses:
+        '200':
+          description: A list of Customer resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+    post:
+      tags:
+        - Customer
+      summary: Create a new Customer
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreate'
+      responses:
+        '201':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+
+  /customers/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Customer
+      summary: Retrieve a Customer by id
+      operationId: retrieveCustomer
+      responses:
+        '200':
+          description: Customer resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+    put:
+      tags:
+        - Customer
+      summary: Update/replace a Customer
+      operationId: updateCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Customer updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+    delete:
+      tags:
+        - Customer
+      summary: Delete a Customer
+      operationId: deleteCustomer
+      responses:
+        '204':
+          description: Customer deleted (no content)
+
+components:
+  schemas:
+    CustomerBase:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+        externalId:
+          type: string
+        description:
+          type: string
+    CustomerCreate:
+      allOf:
+        - $ref: '#/components/schemas/CustomerBase'
+      required:
+        - name
+    Customer:
+      allOf:
+        - $ref: '#/components/schemas/CustomerBase'
+        - type: object
+          properties:
+            id:
+              type: string
+            href:
+              type: string
+            partyRole:
+              type: array
+              items:
+                $ref: '#/components/schemas/RelatedParty'
+            contactMedium:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContactMedium'
+    RelatedParty:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+    ContactMedium:
+      type: object
+      properties:
+        type:
+          type: string
+        preferred:
+          type: boolean
+        medium:
+          type: string

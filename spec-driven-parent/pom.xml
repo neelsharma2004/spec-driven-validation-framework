@@ -23,12 +23,6 @@
 			<name>Proprietary</name>
 		</license>
 	</licenses>
-	<developers>
-		<developer>
-			<name>Neel</name>
-			<email>neelsharma2004@gmail.com</email>
-		</developer>
-	</developers>
 	<scm>
 		<connection>scm:git:https://github.com/neelsharma2004/spec-driven-validation-framework.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/neelsharma2004/spec-driven-validation-framework.git</developerConnection>
@@ -41,6 +35,6 @@
 	</modules>
 
 	<properties>
-		<java.version>25</java.version>
+		<java.version>21</java.version>
 	</properties>
 </project>
