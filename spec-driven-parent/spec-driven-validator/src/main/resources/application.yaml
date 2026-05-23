@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: spec-driven-validator
