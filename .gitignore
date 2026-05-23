@@ -33,3 +33,6 @@ Thumbs.db
 # Misc Java tooling
 *.ctxt
 .mtj.tmp/
+
+plans
+
