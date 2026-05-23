@@ -34,5 +34,18 @@ Thumbs.db
 *.ctxt
 .mtj.tmp/
 
+# Local env files
+.env
+.env-*
+**/.env
+**/.env-*
+
+# Local database files
+*.mv.db
+*.trace.db
+**/*.mv.db
+**/*.trace.db
+
 plans
 
+**.openapi-generator-ignore

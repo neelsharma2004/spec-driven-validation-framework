@@ -1,0 +1,62 @@
+# Customer API sample curl requests
+#
+# Base URL:
+#   http://localhost:8080
+#
+# These requests are ready to paste into Postman as raw cURL imports.
+
+curl --location 'http://localhost:8080/customers/health'
+
+curl --location 'http://localhost:8080/customers'
+
+curl --location 'http://localhost:8080/customers' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "ACME Corporation",
+    "status": "ACTIVE",
+    "externalId": "ext-1001",
+    "description": "Primary enterprise customer",
+    "partyRole": [
+      {
+        "id": "party-1",
+        "name": "John Doe",
+        "role": "CUSTOMER"
+      }
+    ],
+    "contactMedium": [
+      {
+        "type": "email",
+        "preferred": true,
+        "medium": "john.doe@acme.example"
+      }
+    ]
+  }'
+
+curl --location 'http://localhost:8080/customers/cust-12345'
+
+curl --location --request PUT 'http://localhost:8080/customers/cust-12345' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "id": "cust-12345",
+    "href": "/customers/cust-12345",
+    "name": "ACME Corporation Updated",
+    "status": "ACTIVE",
+    "externalId": "ext-1001",
+    "description": "Updated enterprise customer",
+    "partyRole": [
+      {
+        "id": "party-1",
+        "name": "John Doe",
+        "role": "CUSTOMER"
+      }
+    ],
+    "contactMedium": [
+      {
+        "type": "phone",
+        "preferred": true,
+        "medium": "+1-555-0100"
+      }
+    ]
+  }'
+
+curl --location --request DELETE 'http://localhost:8080/customers/cust-12345'

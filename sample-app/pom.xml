@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Parent POM for the repository. It inherits from Spring Boot starter parent to keep
+         consistent dependency versions across modules. -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.learnings.projects.sample</groupId>
+    <artifactId>sample-app-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>sample-app-parent</name>
+    <description>Parent POM for sample-app multi-module project</description>
+
+    <properties>
+        <java.version>21</java.version>
+
+        <spec-validator.version>0.0.1-SNAPSHOT</spec-validator.version>
+        <!-- Default URL used by the customer-api module to fetch the TMF customer OpenAPI file.
+             This can be overridden on the command line or in CI: -Dtmf.customer.swagger.url=... -->
+        <tmf.customer.swagger.url/>
+    </properties>
+
+    <modules>
+        <module>customer-api</module>
+        <module>customer-app</module>
+    </modules>
+
+</project>
+
