@@ -4,7 +4,6 @@ import com.learnings.projects.customer.api.CustomerApi;
 import com.learnings.projects.customer.model.Customer;
 import com.learnings.projects.customer.model.CustomerCreate;
 import com.learnings.projects.customer.app.service.CustomerService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +20,7 @@ public class CustomerApiController implements CustomerApi {
 
     @Override
     public ResponseEntity<Customer> createCustomer(CustomerCreate customerCreate) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(customerCreate));
+        return ResponseEntity.ok(customerService.createCustomer(customerCreate));
     }
 
     @Override
