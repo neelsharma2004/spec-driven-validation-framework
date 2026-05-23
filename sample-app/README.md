@@ -1,139 +1,84 @@
 # Sample App - Customer Management
 
-A standalone Spring Boot application demonstrating a Customer management API generated from the `customer-api` OpenAPI module.
+`customer-app` is a Spring Boot sample that uses the OpenAPI contract from `customer-api` to generate API interfaces and model classes.
 
-## Overview
+## Modules
 
-This sample application showcases a TMF-style Customer API where `customer-app` reads `customer-api/src/main/resources/openapi/customer.yml` and generates the API/model classes during the Maven build.
+- `customer-api` holds the OpenAPI contract in [`customer.yml`](./customer-api/src/main/resources/openapi/customer.yml)
+- `customer-app` contains the Spring Boot application, persistence layer, and controller implementation
 
-## Project Structure
+## What is generated
 
-```
+The OpenAPI generator in `customer-app` generates only:
+
+- API interfaces
+- model classes
+
+The app provides its own controller and business logic separately.
+
+## Project Layout
+
+```text
 sample-app/
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/
-│   │   │   │   └── com/learnings/projects/spec/driven/sample/
-│   │   │   │       ├── SampleAppApplication.java
-│   │   │   │       └── customer/
-│   │   │   │           ├── CustomerController.java
-│   │   │   │           ├── CustomerService.java
-│   │   │   │           ├── Customer.java
-│   │   │   │           ├── ContactMedium.java
-│   │   │   │           ├── RelatedParty.java
-│   │   │   │           ├── CustomerNotFoundException.java
-│   │   │   │           └── CustomerApiExceptionHandler.java
-│   │   │   └── resources/
-│   │   │       └── application.yaml
-│   │   └── test/
-│   │       └── java/
-│   │           └── com/learnings/projects/spec/driven/sample/
-│   │               └── SampleAppApplicationTests.java
-│   └── pom.xml
-├── customer-api/
-│   ├── src/main/resources/openapi/customer.yml
-│   └── pom.xml
-└── pom.xml
+  customer-api/
+    src/main/resources/openapi/customer.yml
+  customer-app/
+    src/main/java/
+      com/learnings/projects/customer/api/
+      com/learnings/projects/customer/app/
+    src/main/resources/
+      application.yaml
+      application-dev.yaml
+      application-prod.yaml
 ```
 
-## Dependencies
+## API Summary
 
-- Spring Boot 3.3.0
-- Spring Web
-- Spring Validation
-- OpenAPI Generator for source generation
+- `GET /customers` returns a plain array of customers
+- `POST /customers` creates a customer
+- `GET /customers/{id}` retrieves one customer
+- `PUT /customers/{id}` updates one customer
+- `DELETE /customers/{id}` deletes one customer
 
-## API Endpoints
+## Important Behavior
 
-### Health Check
-```bash
-GET /customers/health
+- `externalId` is treated as an idempotency key during create
+- if a customer already exists with the same `externalId`, the existing customer is returned instead of creating a duplicate row
+
+## Local Development
+
+The app uses profile-based config:
+
+- `dev` profile uses H2 and loads `.env-dev`
+- `prod` profile is prepared for PostgreSQL
+
+### Dev env file
+
+Create a local `.env-dev` file in `customer-app` using the example file as a template.
+
+Typical values:
+
+```properties
+DB_URL=jdbc:h2:file:./data/customer-db-dev
+DB_USERNAME=sa
+DB_PASSWORD=
 ```
 
-### List Customers
-```bash
-GET /customers
-```
+## Build and Run
 
-### Create Customer
-```bash
-POST /customers
-Content-Type: application/json
-```
+From `sample-app/customer-app`:
 
-### Retrieve Customer
 ```bash
-GET /customers/{id}
-```
-
-### Update Customer
-```bash
-PUT /customers/{id}
-Content-Type: application/json
-```
-
-### Patch Customer
-```bash
-PATCH /customers/{id}
-Content-Type: application/json
-```
-
-### Delete Customer
-```bash
-DELETE /customers/{id}
-```
-
-## Running the App
-
-### Build
-```bash
-cd spec-driven-parent
-mvn clean install
-cd ..\sample-app
-mvn clean package
-```
-
-### Run
-```bash
+mvn clean test
 mvn spring-boot:run
 ```
 
-The application starts on `http://localhost:8080`.
+## Sample Requests
 
-## Generation Flow
-
-The `customer-app` module runs OpenAPI Generator during `generate-sources` and emits generated interfaces and models under `target/generated-sources/openapi`.
-
-The generated code is based on `../customer-api/src/main/resources/openapi/customer.yml`.
-
-## Example Customer Payload
-
-```json
-{
-  "name": "ACME Corporation",
-  "status": "ACTIVE",
-  "externalId": "ext-1001",
-  "description": "Primary enterprise customer",
-  "partyRole": [
-    {
-      "id": "party-1",
-      "name": "John Doe",
-      "role": "CUSTOMER"
-    }
-  ],
-  "contactMedium": [
-    {
-      "type": "email",
-      "preferred": true,
-      "medium": "john.doe@acme.example"
-    }
-  ]
-}
-```
+The file [`customer-api-curls.txt`](./customer-app/customer-api-curls.txt) contains sample curl requests that can be imported directly into Postman.
 
 ## Notes
 
-- `customer-api` contains the OpenAPI contract for the customer domain.
-- `customer-app` should implement the generated API interfaces or delegate beans, not hand-written duplicate models.
-- If you change the contract, rerun the Maven build to regenerate the sources.
+- Regenerate sources after changing [`customer.yml`](./customer-api/src/main/resources/openapi/customer.yml)
+- The generator config is intentionally kept minimal so only interfaces and models are emitted
+- The application layer owns the controller, service, mapper, repository, and entity classes

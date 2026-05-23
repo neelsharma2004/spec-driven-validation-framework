@@ -5,14 +5,20 @@ import com.learnings.projects.customer.app.mapper.CustomerMapper;
 import com.learnings.projects.customer.model.Customer;
 import com.learnings.projects.customer.model.CustomerCreate;
 import com.learnings.projects.customer.app.repository.CustomerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class CustomerService {
+
+    private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
@@ -34,6 +40,15 @@ public class CustomerService {
 
     @Transactional
     public Customer createCustomer(CustomerCreate customerCreate) {
+        if (customerCreate.getExternalId() != null && !customerCreate.getExternalId().isBlank()) {
+            CustomerEntity existing = customerRepository.findFirstByExternalId(customerCreate.getExternalId())
+                    .orElse(null);
+            if (existing != null) {
+                logger.info("Customer with externalId: {} already exists!", customerCreate.getExternalId());
+                return customerMapper.toModel(existing);
+            }
+        }
+
         CustomerEntity entity = customerMapper.toEntity(customerCreate);
         entity.setId("cust-" + UUID.randomUUID());
         entity.setHref("/customers/" + entity.getId());
