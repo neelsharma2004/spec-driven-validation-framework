@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.0</version>
+        <version>4.1.0</version>
         <relativePath/>
     </parent>
 
@@ -20,7 +20,7 @@
     <description>Parent POM for sample-app multi-module project</description>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
 
         <spec-validator.version>0.0.1-SNAPSHOT</spec-validator.version>
         <!-- Default URL used by the customer-api module to fetch the TMF customer OpenAPI file.
